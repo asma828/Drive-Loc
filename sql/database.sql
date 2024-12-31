@@ -55,3 +55,14 @@ CREATE TABLE reviews (
     FOREIGN KEY (user_id) REFERENCES utilisateur(id_user),
     FOREIGN KEY (vehicle_id) REFERENCES vechicule(id_vechicule)
      );
+ ALTER TABLE vechicule
+    ADD COLUMN image text;
+
+INSERT INTO role (roleName) VALUES ('client'), ('admin');
+
+INSERT INTO categorie (name) VALUES ('SUV'), ('Berline'), ('Camionnette');
+
+INSERT INTO vechicule (name, model, prix, categorie_id, image) 
+VALUES 
+('Toyota RAV4', '2022', 50, 1, 'toyota_rav4.jpg'),
+('BMW X5', '2023', 70, 1, 'bmw_x5.jpg');
