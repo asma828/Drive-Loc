@@ -1,3 +1,29 @@
+<?php
+include '../includes/autoloader.php';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+
+    $db = new Database();
+    $utilisateur = new Utilisateur($db);
+    
+    $resultat = $utilisateur->connexion($email, $password);
+    
+    if($resultat == "Connexion réussie") {
+        // Redirection basée sur le rôle stocké dans la session
+        if($_SESSION['role'] == 2) { 
+            header("Location: admin.php");
+        } else { 
+            header("Location: home.php");
+        }
+        exit();
+    } else {
+        header("Location: login.php?error=" . urlencode($resultat));
+        exit();
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -57,7 +83,7 @@
      <nav class="fixed top-0 left-0 right-0 z-50 bg-black bg-opacity-90">
         <div class="container mx-auto px-4 py-3">
             <div class="flex justify-between items-center">
-                <a href="/" class="text-2xl text-white font-light tracking-widest">
+                <a href="home.php" class="text-2xl text-white font-light tracking-widest">
                     DRIVE & LOC
                 </a>
                 <!-- <a href="/" class="text-white hover:text-gold transition-colors duration-300">
@@ -89,12 +115,12 @@
                         <p class="text-gray-600">Accédez à votre espace personnel</p>
                     </div>
 
-                    <form class="space-y-6">
+                    <form class="space-y-6" id="loginForm" action="" method="POST">
                         <div>
-                            <input type="email" placeholder="Email" class="form-input">
+                            <input type="email" name="email" placeholder="Email" class="form-input">
                         </div>
                         <div>
-                            <input type="password" placeholder="Mot de passe" class="form-input">
+                            <input type="password" name="password" placeholder="Mot de passe" class="form-input">
                         </div>
                         <div class="flex items-center justify-between text-sm">
                             <label class="flex items-center">
