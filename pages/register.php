@@ -1,3 +1,23 @@
+<?php
+include '../includes/autoloader.php';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $nom = $_POST['nom'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+
+    $db = new Database();
+    $utilisateur = new Utilisateur($db);
+    $resultat = $utilisateur->signup($nom, $email, $password);
+
+    if($resultat == "Inscription réussie") {
+        header("Location: login.php?success=1");
+    } else {
+        header("Location: register.php?error=" . urlencode($resultat));
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -79,22 +99,20 @@
                     <p class="text-gray-600">Accédez à l'expérience Drive & Loc</p>
                 </div>
 
-                <form class="space-y-6">
+                <form class="space-y-6" id="signupForm" action="" method="POST">
                     <!-- Personal Information -->
                     <div class="space-y-6">
                         <h3 class="text-xl font-light">Informations Personnelles</h3>
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <input type="text" placeholder="Nom" class="form-input" required>
+                                <input type="text" name="nom" placeholder="Nom" class="form-input" required>
                             </div>
                             
                         </div>
                         <div>
-                            <input type="email" placeholder="Email" class="form-input" required>
+                            <input type="email" name="email" placeholder="Email" class="form-input" required>
                         </div>
-                        <div>
-                            <input type="tel" placeholder="Téléphone" class="form-input" required>
-                        </div>
+                       
                     </div>
 
 
@@ -102,11 +120,11 @@
                     <div class="space-y-6">
                         <h3 class="text-xl font-light">Sécurité du Compte</h3>
                         <div>
-                            <input type="password" placeholder="Mot de passe" class="form-input" required>
+                            <input type="password" name="password" placeholder="Mot de passe" class="form-input" required>
                         </div>
-                        <div>
+                        <!-- <div>
                             <input type="password" placeholder="Confirmer le mot de passe" class="form-input" required>
-                        </div>
+                        </div> -->
                     </div>
 
                     <button type="submit" class="btn-primary w-full">CRÉER MON COMPTE</button>
