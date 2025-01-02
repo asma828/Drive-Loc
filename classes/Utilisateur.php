@@ -56,8 +56,9 @@ class Utilisateur {
                 // Start the session and set session variables
                 session_start();
                 $_SESSION['id_user'] = $row['id_user'];
-                $_SESSION['role'] = $row['id_role'];
+                $_SESSION['role'] = $row['role_id'];
                 $_SESSION['name'] = $row['name'];
+                var_dump($_SESSION);
                 return "Connexion réussie";
             }
             return "Mot de passe incorrect";
