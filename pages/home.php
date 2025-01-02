@@ -1,3 +1,18 @@
+<?php
+
+session_start();
+if (!isset($_SESSION['id_user'])) {
+    header('Location: login.php');
+    exit();
+}
+if ($_SESSION['role'] == 2) {
+
+    header('Location: admin.php');
+    exit();
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -64,14 +79,13 @@
                         DRIVE & LOC
                     </a>
                     <div class="hidden md:flex space-x-8">
-                        <a href="/vehicles.php" class="text-sm tracking-wider hover:text-gold transition-colors duration-300">VÉHICULES</a>
-                        <a href="/reservation.php" class="text-sm tracking-wider hover:text-gold transition-colors duration-300">RÉSERVER</a>
-                        <a href="/reviews.php" class="text-sm tracking-wider hover:text-gold transition-colors duration-300">AVIS</a>
+                        <a href="vehicles.php" class="text-sm tracking-wider hover:text-gold transition-colors duration-300">VÉHICULES</a>
+                        <a href="reservation.php" class="text-sm tracking-wider hover:text-gold transition-colors duration-300">RÉSERVER</a>
+                        <a href="reviews.php" class="text-sm tracking-wider hover:text-gold transition-colors duration-300">AVIS</a>
                     </div>
                 </div>
                 <div class="flex items-center space-x-8">
-                    <a href="login.php" class="text-sm tracking-wider hover:text-gold transition-colors duration-300">CONNEXION</a>
-                    <a href="register.php" class="text-sm bg-white text-black px-6 py-2 hover:bg-gold transition-colors duration-300">INSCRIPTION</a>
+                    <a href="logout.php" class="text-sm bg-white text-black px-6 py-2 hover:bg-gold transition-colors duration-300">LOGOUT</a>
                 </div>
             </div>
         </div>
@@ -96,10 +110,10 @@
                     Découvrez notre collection exclusive de véhicules de prestige pour une expérience de conduite incomparable.
                 </p>
                 <div class="flex space-x-6">
-                    <a href="/vehicles.php" class="bg-white text-black px-8 py-4 hover:bg-gold transition-colors duration-300">
+                    <a href="vehicles.php" class="bg-white text-black px-8 py-4 hover:bg-gold transition-colors duration-300">
                         DÉCOUVRIR LA FLOTTE
                     </a>
-                    <a href="/reservation.php" class="border border-white px-8 py-4 hover:bg-white hover:text-black transition-colors duration-300">
+                    <a href="reservation.php" class="border border-white px-8 py-4 hover:bg-white hover:text-black transition-colors duration-300">
                         RÉSERVER MAINTENANT
                     </a>
                 </div>
