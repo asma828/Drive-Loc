@@ -1,17 +1,28 @@
 <?php
 session_start();
 
-
 if (!isset($_SESSION['id_user'])) {
     header('Location: login.php');
     exit();
 }
 
-
 if ($_SESSION['role'] != 2) {
     header('Location: home.php');
     exit();
 }
+include '../includes/autoloader.php';
+
+$database = new Database();
+$db = $database->getConnection();
+
+$reservationObj = new Reservation($db);
+$nomberofreservation=$reservationObj->numbreofreservation();
+
+$vechiculeObj= new Vehicle($db);
+$nomberofVechicule=$vechiculeObj->numbreofVechicule();
+
+$utilisateurObj= new Utilisateur($database);
+$numberofclient=$utilisateurObj->numbreofclient();
 ?>
 
 <!DOCTYPE html>
@@ -32,15 +43,15 @@ if ($_SESSION['role'] != 2) {
         </div>
         
         <nav class="space-y-2">
-            <a href="#" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg bg-white text-black">
+            <a href="admin.php" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg bg-white text-black">
                 <i class="fas fa-chart-bar"></i>
                 <span>Dashboard</span>
             </a>
-            <a href="#" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-400 hover:bg-gray-800">
+            <a href="AdminVehicles.php" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-400 hover:bg-gray-800">
                 <i class="fas fa-car"></i>
                 <span>Véhicules</span>
             </a>
-            <a href="#" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-400 hover:bg-gray-800">
+            <a href="Adminreservation.php" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-400 hover:bg-gray-800">
                 <i class="fas fa-calendar"></i>
                 <span>Réservations</span>
             </a>
@@ -48,7 +59,7 @@ if ($_SESSION['role'] != 2) {
                 <i class="fas fa-users"></i>
                 <span>Clients</span>
             </a>
-            <a href="#" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-400 hover:bg-gray-800">
+            <a href="AdminReviews.php" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-400 hover:bg-gray-800">
                 <i class="fas fa-star"></i>
                 <span>Avis</span>
             </a>
@@ -80,7 +91,7 @@ if ($_SESSION['role'] != 2) {
                     <i class="fas fa-car text-gray-600"></i>
                     <span class="text-sm text-green-500">+12%</span>
                 </div>
-                <h3 class="text-3xl font-light mb-1">52</h3>
+                <h3 class="text-3xl font-light mb-1"><?= htmlspecialchars($nomberofVechicule['total']) ?></h3>
                 <p class="text-sm text-gray-600">Total Véhicules</p>
             </div>
             <!-- Active Reservations -->
@@ -89,7 +100,7 @@ if ($_SESSION['role'] != 2) {
                     <i class="fas fa-calendar text-gray-600"></i>
                     <span class="text-sm text-green-500">+18%</span>
                 </div>
-                <h3 class="text-3xl font-light mb-1">28</h3>
+                <h3 class="text-3xl font-light mb-1"><?= htmlspecialchars($nomberofreservation['total']) ?></h3>
                 <p class="text-sm text-gray-600">Réservations Actives</p>
             </div>
             <!-- New Clients -->
@@ -98,7 +109,7 @@ if ($_SESSION['role'] != 2) {
                     <i class="fas fa-users text-gray-600"></i>
                     <span class="text-sm text-green-500">+25%</span>
                 </div>
-                <h3 class="text-3xl font-light mb-1">124</h3>
+                <h3 class="text-3xl font-light mb-1"><?= htmlspecialchars($numberofclient['total']) ?></h3>
                 <p class="text-sm text-gray-600">Nouveaux Clients</p>
             </div>
             <!-- Average Rating -->
