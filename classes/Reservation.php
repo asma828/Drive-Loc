@@ -82,4 +82,13 @@ class Reservation {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+public function numbreofreservation(){
+       $query="SELECT COUNT(*) as total FROM reservation";
+       $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result;
+}
+
+
 }
