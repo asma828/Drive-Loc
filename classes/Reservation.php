@@ -90,5 +90,14 @@ public function numbreofreservation(){
         return $result;
 }
 
-
+ public function affichereservation(){
+    $query="SELECT DATEDIFF(reservation.end_date,reservation.start_date) as durée,vechicule.image,vechicule.name,vechicule.prix,utilisateur.name as client
+    FROM vechicule
+    join reservation on vechicule.id_vechicule=reservation.vehicle_id
+    join utilisateur on utilisateur.id_user=reservation.user_id";
+    $stmt = $this->conn->prepare($query);
+     $stmt->execute();
+     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+     return $result;
+ }
 }
