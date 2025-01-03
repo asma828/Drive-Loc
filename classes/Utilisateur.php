@@ -65,6 +65,12 @@ class Utilisateur {
         }
         return "Email non trouvé";
     }
-    
+    public function numbreofclient(){
+        $query="SELECT (COUNT(*) - 1) as total FROM utilisateur";
+        $stmt = $this->db->prepare($query);
+         $stmt->execute();
+         $result = $stmt->fetch(PDO::FETCH_ASSOC);
+         return $result;
+}
 }
 ?>
