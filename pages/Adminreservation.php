@@ -1,5 +1,16 @@
 
 <?php
+session_start();
+
+if (!isset($_SESSION['id_user'])) {
+    header('Location: login.php');
+    exit();
+}
+
+if ($_SESSION['role'] != 2) {
+    header('Location: home.php');
+    exit();
+}
 include '../includes/autoloader.php';
 
 $database = new Database();
@@ -43,13 +54,10 @@ $utilisateurObj= new Utilisateur($database);
                 <span>Réservations</span>
             </a>
             <a href="AdminReviews.php" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-400 hover:bg-gray-800">
-                <i class="fas fa-users"></i>
-                <span>Clients</span>
-            </a>
-            <a href="#" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-400 hover:bg-gray-800">
                 <i class="fas fa-star"></i>
                 <span>Avis</span>
             </a>
+          
         </nav>
     </div>
 <div class="flex">
@@ -101,13 +109,13 @@ $utilisateurObj= new Utilisateur($database);
                             <td class="px-6 py-4"><?= htmlspecialchars( $reservation['name']) ?></td>
                             <td class="px-6 py-4">
                                 
-                                <div class="text-sm text-gray-500"><?= htmlspecialchars( $reservation['durée']) ?></div>
+                                <div class="text-sm text-gray-500"><?= htmlspecialchars( $reservation['durée']) ?>jour</div>
                             </td>
-                            <td class="px-6 py-4"><?= htmlspecialchars( $reservation['prix']) ?></td>
+                            <td class="px-6 py-4"><?= htmlspecialchars( $reservation['prix']) ?>€</td>
                             <td class="px-6 py-4">
                             
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                    Confirmé
+                                <?= htmlspecialchars( $reservation['status']) ?>
                                 </span>
                             </td>
                             <td class="px-6 py-4">
@@ -115,12 +123,12 @@ $utilisateurObj= new Utilisateur($database);
                                     <button class="text-blue-600 hover:text-blue-900">
                                         <i class="fas fa-eye"></i>
                                     </button>
-                                    <button class="text-green-600 hover:text-green-900">
+                                    <a href="aproveReservation.php?id=<?php echo $reservation['id_reservation'] ?>" class="text-green-600 hover:text-green-900">
                                         <i class="fas fa-check"></i>
-                                    </button>
-                                    <button class="text-red-600 hover:text-red-900">
+                                    </a>
+                                    <a href="denyResrvation.php?id=<?php echo $reservation['id_reservation'] ?>" class="text-red-600 hover:text-red-900">
                                         <i class="fas fa-times"></i>
-                                    </button>
+                                    </a>
                                 </div>
                             </td>
                         </tr>
