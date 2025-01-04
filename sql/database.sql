@@ -90,3 +90,6 @@ INSERT INTO place (name) VALUES
 ('Aéroport Marrakech Menara'),
 ('Gare Rabat Ville');
 
+ALTER TABLE reservation
+    ADD COLUMN status enum ('Anuller','Attent','Confirme') DEFAULT 'Attent';
+
