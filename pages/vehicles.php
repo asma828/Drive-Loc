@@ -1,3 +1,29 @@
+<?php
+include '../includes/autoloader.php';
+
+
+$database = new Database();
+$db = $database->getConnection();
+
+$vehicleObj = new Vehicle($db);
+$categoryObj = new Category($db);
+
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$category = isset($_GET['category']) ? $_GET['category'] : '';
+$search = isset($_GET['search']) ? $_GET['search'] : '';
+$limit = 6; 
+
+$filters = [
+    'category' => $category,
+    'search' => $search
+];
+
+$vehicles = $vehicleObj->getVehicles($page, $limit, $filters);
+$total = $vehicleObj->getTotalCount($filters);
+$total_pages = ceil($total / $limit);
+$categories = $categoryObj->getAllCategories();
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -27,7 +53,7 @@
     </style>
 </head>
 <body class="bg-gray-100">
-    <!-- Navigation (same as home page) -->
+    <!-- Navigation -->
     <nav class="bg-black text-white">
         <div class="container mx-auto px-8 py-6">
             <div class="flex justify-between items-center">
@@ -37,13 +63,12 @@
                     </a>
                     <div class="hidden md:flex space-x-8">
                         <a href="vehicles.php" class="text-sm tracking-wider text-gold">VÉHICULES</a>
-                        <a href="reservation.php" class="text-sm tracking-wider hover:text-gold transition-colors duration-300">RÉSERVER</a>
+                        <a href="affichereservation.php" class="text-sm tracking-wider hover:text-gold transition-colors duration-300">RÉSERVER</a>
                         <a href="reviews.php" class="text-sm tracking-wider hover:text-gold transition-colors duration-300">AVIS</a>
                     </div>
                 </div>
                 <div class="flex items-center space-x-8">
-                    <a href="login.php" class="text-sm tracking-wider hover:text-gold transition-colors duration-300">CONNEXION</a>
-                    <a href="register.php" class="text-sm bg-white text-black px-6 py-2 hover:bg-gold transition-colors duration-300">INSCRIPTION</a>
+                    <a href="logout.php" class="text-sm bg-white text-black px-6 py-2 hover:bg-gold transition-colors duration-300">LOGOUT</a>
                 </div>
             </div>
         </div>
@@ -60,23 +85,29 @@
     <!-- Filters Section -->
     <section class="py-8 bg-white border-b">
         <div class="container mx-auto px-8">
-            <div class="flex flex-wrap items-center gap-6">
+            <form method="GET" class="flex flex-wrap items-center gap-6">
                 <div class="flex-1">
-                    <input type="text" placeholder="Rechercher un véhicule..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-black">
+                    <input type="text" 
+                           name="search" 
+                           value="<?= htmlspecialchars($search) ?>"
+                           placeholder="Rechercher un véhicule..." 
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-black">
                 </div>
-                <select class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-black">
+                <select name="category" 
+                        class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-black">
                     <option value="">Toutes les catégories</option>
-                    <option value="sports">Voitures de sport</option>
-                    <option value="luxury">Berlines de luxe</option>
-                    <option value="suv">SUV</option>
+                    <?php foreach($categories as $cat): ?>
+                        <option value="<?= $cat['id_categorie'] ?>" 
+                                <?= $category == $cat['id_categorie'] ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($cat['name']) ?>
+                        </option>
+                    <?php endforeach; ?>
                 </select>
-                <select class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-black">
-                    <option value="">Prix (tous)</option>
-                    <option value="0-500">0 - 500€ / jour</option>
-                    <option value="500-1000">500 - 1000€ / jour</option>
-                    <option value="1000+">1000€+ / jour</option>
-                </select>
-            </div>
+                <button type="submit" 
+                        class="px-6 py-2 bg-black text-white hover:bg-gold transition-colors duration-300">
+                    Filtrer
+                </button>
+            </form>
         </div>
     </section>
 
@@ -84,46 +115,57 @@
     <section class="py-16">
         <div class="container mx-auto px-8">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Vehicle Card -->
-                <div class="bg-white rounded-lg overflow-hidden shadow-lg hover-scale">
-                    <div class="relative">
-                        <img src="../assets/images/car.jpg" alt="Vehicle" class="w-full h-64 object-cover">
-                        <div class="absolute top-4 right-4 bg-black text-white px-4 py-2 text-sm">
-                            À partir de 1200€/jour
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold mb-2">Porsche 911 GT3</h3>
-                        <p class="text-gray-600 mb-4">Une sportive d'exception alliant performance et élégance.</p>
-                        <div class="flex justify-between items-center">
-                            <div class="flex items-center space-x-2">
-                                <i class="fas fa-star text-gold"></i>
-                                <span>4.9 (12 avis)</span>
+                <?php foreach($vehicles as $vehicle): ?>
+                    <div class="bg-white rounded-lg overflow-hidden shadow-lg hover-scale">
+                        <div class="relative">
+                            <img src="<?= htmlspecialchars($vehicle['image']) ?>" 
+                                 alt="<?= htmlspecialchars($vehicle['name']) ?>"
+                                 class="w-full h-64 object-cover">
+                            <div class="absolute top-4 right-4 bg-black text-white px-4 py-2 text-sm">
+                                À partir de <?= number_format($vehicle['prix'], 2) ?>€/jour
                             </div>
-                            <a href="vehicle-details.php?id=1" class="bg-black text-white px-6 py-2 hover:bg-gold transition-colors duration-300">
-                                Voir détails
-                            </a>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold mb-2"><?= htmlspecialchars($vehicle['name']) ?></h3>
+                            <p class="text-gray-600 mb-4">
+                                <?= htmlspecialchars($vehicle['model']) ?> - 
+                                <?= htmlspecialchars($vehicle['category_name']) ?>
+                            </p>
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-star text-gold"></i>
+                                    <span>4.9 (12 avis)</span>
+                                </div>
+                                <a href="vehicle_details.php?id=<?= $vehicle['id_vechicule'] ?>" 
+                                   class="bg-black text-white px-6 py-2 hover:bg-gold transition-colors duration-300">
+                                    Voir détails
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <!-- Repeat vehicle cards with different data -->
+                <?php endforeach; ?>
             </div>
 
             <!-- Pagination -->
-            <div class="mt-12 flex justify-center">
-                <div class="flex space-x-2">
-                    <a href="#" class="w-10 h-10 flex items-center justify-center border border-gray-300 rounded hover:bg-black hover:text-white transition-colors duration-300">1</a>
-                    <a href="#" class="w-10 h-10 flex items-center justify-center border border-gray-300 rounded hover:bg-black hover:text-white transition-colors duration-300">2</a>
-                    <a href="#" class="w-10 h-10 flex items-center justify-center border border-gray-300 rounded hover:bg-black hover:text-white transition-colors duration-300">3</a>
-                    <span class="w-10 h-10 flex items-center justify-center">...</span>
-                    <a href="#" class="w-10 h-10 flex items-center justify-center border border-gray-300 rounded hover:bg-black hover:text-white transition-colors duration-300">10</a>
+            <?php if($total_pages > 1): ?>
+                <div class="mt-12 flex justify-center">
+                    <div class="flex space-x-2">
+                        <?php for($i = 1; $i <= $total_pages; $i++): ?>
+                            <a href="?page=<?= $i ?>&category=<?= $category ?>&search=<?= urlencode($search) ?>"
+                               class="w-10 h-10 flex items-center justify-center border border-gray-300 rounded 
+                                      hover:bg-black hover:text-white transition-colors duration-300
+                                      <?= $page === $i ? 'bg-black text-white' : '' ?>">
+                                <?= $i ?>
+                            </a>
+                        <?php endfor; ?>
+                    </div>
                 </div>
-            </div>
+            <?php endif; ?>
         </div>
     </section>
 
-    <!-- Footer (same as home page) -->
-    <footer class="bg-black text-white py-16">
+     <!-- Footer -->
+     <footer class="bg-black text-white py-16">
         <div class="container mx-auto px-8">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
                 <div>
