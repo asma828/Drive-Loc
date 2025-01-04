@@ -1,6 +1,6 @@
 <?php
+session_start();
 include '../includes/autoloader.php';
-
 
 $database = new Database();
 $db = $database->getConnection();
@@ -10,9 +10,7 @@ $reviewObj = new Review($db);
 $id = isset($_GET['id']) ? $_GET['id'] : die('ID not specified');
 $vehicle = $vehicleObj->getVehicleById($id);
 
-// Get reviews for this vehicle (you'll need to implement this)
-$reviews = $reviewObj->getReviewsByVehicle($id);
-$ratingInfo = $reviewObj->getAverageRating($id);?>
+?>
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -66,13 +64,13 @@ $ratingInfo = $reviewObj->getAverageRating($id);?>
                          alt="<?= htmlspecialchars($vehicle['name']) ?>"
                          class="w-full h-96 object-cover rounded">
                 </div>
-                <!-- You can add more images here in a grid -->
+    
                 <div class="grid grid-cols-3 gap-4">
                     <div class="bg-white p-2 rounded-lg shadow">
                         <img src="<?= htmlspecialchars($vehicle['image']) ?>" 
                              class="w-full h-24 object-cover rounded cursor-pointer hover:opacity-75">
                     </div>
-                    <!-- Add more thumbnail images -->
+                
                 </div>
             </div>
 
@@ -113,7 +111,7 @@ $ratingInfo = $reviewObj->getAverageRating($id);?>
                         <h3 class="font-semibold">Puissance</h3>
                         <p class="text-gray-600">450 CV</p>
                     </div>
-                    <!-- Add more specifications -->
+                    
                 </div>
 
                 <!-- Reservation Button -->
@@ -137,44 +135,104 @@ $ratingInfo = $reviewObj->getAverageRating($id);?>
         <!-- Reviews Section -->
         <div class="mt-16">
             <h2 class="heading-font text-3xl mb-6">Avis Clients</h2>
-            <div class="space-y-6">
-                <?php foreach($reviews as $review): ?>
-                <div class="bg-white p-6 rounded-lg shadow">
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <h3 class="font-semibold"><?= htmlspecialchars($review['user_name']) ?></h3>
-                            <div class="flex items-center text-gold text-sm mt-1">
-                                <?php for($i = 1; $i <= 5; $i++): ?>
-                                    <i class="fas fa-star <?= $i <= $review['rating'] ? 'text-gold' : 'text-gray-300' ?>"></i>
-                                <?php endfor; ?>
-                            </div>
-                        </div>
-                        <span class="text-gray-500 text-sm"><?= $review['created_at'] ?></span>
+           
+            <?php 
+            
+    
+    $userId = $_SESSION['id_user'];
+    
+    if ($userId) {
+        $canReview = $reviewObj->canUserReview($userId, $id);
+        if ($canReview) { 
+    ?>
+        <!-- Review Form -->
+        <div class="bg-white p-6 rounded-lg shadow mb-6">
+            <form action="add-review.php" method="POST" class="space-y-4">
+                <input type="hidden" name="vehicle_id" value="<?= $id ?>">
+                
+                <div>
+                    <label class="block mb-2">Note</label>
+                    <div class="flex space-x-4">
+                        <?php for($i = 1; $i <= 5; $i++): ?>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="rating" value="<?= $i ?>" class="hidden peer">
+                            <i class="fas fa-star text-2xl peer-checked:text-gold text-gray-300"></i>
+                        </label>
+                        <?php endfor; ?>
                     </div>
-                    <p class="text-gray-600"><?= htmlspecialchars($review['comment']) ?></p>
                 </div>
-                <?php endforeach; ?>
 
-                <!-- Add Review Button -->
-                <a href="add_review.php?vehicle=<?= $vehicle['id_vechicule'] ?>" 
-                   class="inline-block bg-black text-white px-8 py-3 rounded-lg hover:bg-gold transition-colors duration-300">
-                    Ajouter un avis
-                </a>
-            </div>
+                <div>
+                    <label class="block mb-2">Commentaire</label>
+                    <textarea name="comment" rows="4" 
+                            class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-gold"
+                            required></textarea>
+                </div>
+
+                <button type="submit" 
+                        class="bg-black text-white px-6 py-2 rounded-lg hover:bg-gold transition-colors duration-300">
+                    Publier l'avis
+                </button>
+            </form>
         </div>
+    <?php 
+        } else {
+            echo '<p class="mb-6 text-gray-600">Vous pourrez laisser un avis après avoir loué ce véhicule.</p>';
+        }
+    }
+    ?>
+
+    <!-- Display existing reviews -->
+    <div class="space-y-6">
+        <?php 
+        $reviews = $reviewObj->getReviewsByVehicle($id);
+        if($reviews): 
+            foreach($reviews as $review): 
+        ?>
+            <div class="bg-white p-6 rounded-lg shadow">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h3 class="font-semibold"><?= htmlspecialchars($review['user_name']) ?></h3>
+                        <div class="flex items-center text-gold text-sm mt-1">
+                            <?php for($i = 1; $i <= 5; $i++): ?>
+                                <i class="fas fa-star <?= $i <= $review['rating'] ? 'text-gold' : 'text-gray-300' ?>"></i>
+                            <?php endfor; ?>
+                        </div>
+                    </div>
+                    <span class="text-gray-500 text-sm">
+                        <?= date('d/m/Y', strtotime($review['created_at'])) ?>
+                    </span>
+                </div>
+                <p class="text-gray-600"><?= htmlspecialchars($review['comment']) ?></p>
+                <div class="flex space-x-3">
+                        <a href="" class="text-blue-600 hover:text-blue-900">
+                            <i class="fas fa-edit"></i>
+                            </a>
+                        <a href="" class="text-red-600 hover:text-red-900">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </div>
+            </div>
+        <?php 
+            endforeach; 
+        else: 
+        ?>
+            <p class="text-gray-600">Aucun avis pour le moment.</p>
+        <?php endif; ?>
+    </div>
+</div>
 
         <!-- Similar Vehicles -->
         <div class="mt-16">
             <h2 class="heading-font text-3xl mb-6">Véhicules Similaires</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Add similar vehicles here -->
             </div>
         </div>
     </div>
 
     <!-- Footer -->
     <footer class="bg-black text-white py-16">
-        <!-- Add your footer content here -->
+        
     </footer>
 </body>
 </html>
