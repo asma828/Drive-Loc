@@ -108,12 +108,7 @@ $userReservations = $reservation->getReservationsByUser($_SESSION['id_user']);
                                 </a>
                             </div>
                             
-                            <?php if ($review->userCanReview($_SESSION['id_user'], $reservation['vehicle_id'])): ?>
-                                <a href="add_review.php?vehicle_id=<?php echo $reservation['vehicle_id']; ?>" 
-                                   class="inline-block bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
-                                    Ajouter un avis
-                                </a>
-                            <?php endif; ?>
+                           
                         </div>
                     </div>
                 </div>
