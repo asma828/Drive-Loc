@@ -62,10 +62,67 @@ $afficheVechicule=$vechiculeObj->afficheVechicule();
         <div class="ml-64 flex-1 p-8">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-3xl font-light">Gestion des Véhicules</h2>
-                <button class="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800">
+                <button id="addVehicle" class="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800">
                     <i class="fas fa-plus mr-2"></i>Ajouter en Masse
                 </button>
             </div>
+
+<!-- Popup for Add Vehicle -->
+<div
+        class="fixed inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center hidden z-50"
+        id="pop_add_vehicle">
+        <div class="bg-white rounded-lg w-1/2 p-6 relative">
+            <button
+                id="ClosePopUp"
+                class="absolute top-3 right-3 text-gray-600 hover:text-gray-900 text-2xl font-bold">
+                &times;
+            </button>
+            <h3 class="text-xl font-primary mb-4 text-center text-black">Add Vehicle</h3>
+            <form action="" method="POST" enctype="multipart/form-data">
+                <div class="flex flex-col gap-5">
+                    <!-- Vehicle Name -->
+                    <div class="flex flex-col">
+                        <label for="name" class="text-black font-primary font-semibold">Vehicle Name</label>
+                        <input type="text" id="name" name="name" class="shadow-md p-2 rounded-md" required>
+                    </div>
+
+                    <!-- Vehicle Model -->
+                    <div class="flex flex-col">
+                        <label for="model" class="text-black font-primary font-semibold">Vehicle Model</label>
+                        <input type="text" id="model" name="model" class="shadow-md p-2 rounded-md" required>
+                    </div>
+
+                    <!-- Price -->
+                    <div class="flex flex-col">
+                        <label for="price" class="text-black font-primary font-semibold">Price (per day)</label>
+                        <input type="number" step="0.01" id="price" name="price" class="shadow-md p-2 rounded-md" required>
+                    </div>
+
+                    <!-- Category -->
+                    <div class="flex flex-col">
+                        <label for="category" class="text-black font-primary font-semibold">Category</label>
+                        <select id="category" name="category" class="shadow-md p-2 rounded-md" required>
+                            <option value="">Select Category</option>
+                            <option value="1">Luxury</option>
+                            <option value="2">SUV</option>
+                            <option value="3">Sports</option>
+                        </select>
+                    </div>
+
+                    <!-- Vehicle Image -->
+                    <div class="flex flex-col">
+                        <label for="image" class="text-black font-primary font-semibold">Vehicle Image</label>
+                        <input type="text" id="image" name="image" class="shadow-md p-2 rounded-md" required>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button id="submit" name="submit" class="bg-black text-white px-6 py-3 rounded-md mt-4 hover:bg-gold transition-colors duration-300">
+                        Add Vehicle
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
             <!-- Filters -->
             <div class="bg-white p-4 rounded-lg shadow mb-6">
@@ -167,5 +224,18 @@ $afficheVechicule=$vechiculeObj->afficheVechicule();
             </div>
         </div>
     </div>
+    <script>
+        const addVehicle = document.getElementById("addVehicle");
+        const pop_add_vehicle = document.getElementById("pop_add_vehicle");
+        const ClosePopUp = document.getElementById("ClosePopUp");
+
+        addVehicle.addEventListener("click", () => {
+            pop_add_vehicle.classList.toggle("hidden");
+        });
+
+        ClosePopUp.addEventListener("click", () => {
+            pop_add_vehicle.classList.toggle("hidden");
+        });
+    </script>
 </body>
 </html>
