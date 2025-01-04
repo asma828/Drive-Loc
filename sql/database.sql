@@ -93,3 +93,8 @@ INSERT INTO place (name) VALUES
 ALTER TABLE reservation
     ADD COLUMN status enum ('Anuller','Attent','Confirme') DEFAULT 'Attent';
 
+ALTER TABLE reservation
+   DROP FOREIGN KEY reservation_ibfk_2;
+   
+ALTER TABLE reservation   
+   ADD CONSTRAINT reservation_ibfk_2 FOREIGN KEY (vehicle_id) REFERENCES vechicule(id_vechicule) ON DELETE CASCADE;
