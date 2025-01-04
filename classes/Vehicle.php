@@ -94,6 +94,15 @@ class Vehicle {
          $result = $stmt->fetch(PDO::FETCH_ASSOC);
          return $result;
 }
-   
+    public function afficheVechicule(){
+        $query="SELECT vechicule.name as car,vechicule.id_vechicule,vechicule.model,vechicule.image,vechicule.prix,categorie.name 
+        FROM vechicule
+        join categorie on categorie.id_categorie=vechicule.categorie_id";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
 }
 ?>
