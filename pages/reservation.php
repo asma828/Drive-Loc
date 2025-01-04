@@ -118,7 +118,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
     </div>
 
-   
+    <?php if (isset($success)): ?>
+    <script>
+        Swal.fire({
+            title: 'Réservation Confirmée!',
+            text: 'Votre véhicule a été réservé avec succès',
+            icon: 'success',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#000'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = 'vehicles.php';
+            }
+        });
+    </script>
+    <?php endif; ?>
+
+    <?php if (isset($error)): ?>
+    <script>
+        Swal.fire({
+            title: 'Erreur',
+            text: '<?= $error ?>',
+            icon: 'error',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#000'
+        });
+    </script>
+    <?php endif; ?>
 
 <!-- Additional Information -->
 <section class="container mx-auto px-8 py-16">
