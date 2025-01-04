@@ -1,5 +1,15 @@
 <?php
+session_start();
 
+if (!isset($_SESSION['id_user'])) {
+    header('Location: login.php');
+    exit();
+}
+
+if ($_SESSION['role'] != 2) {
+    header('Location: home.php');
+    exit();
+}
 include '../includes/autoloader.php';
 
 $database = new Database();
@@ -39,10 +49,6 @@ $afficheVechicule=$vechiculeObj->afficheVechicule();
             <a href="Adminreservation.php" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-400 hover:bg-gray-800">
                 <i class="fas fa-calendar"></i>
                 <span>Réservations</span>
-            </a>
-            <a href="#" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-400 hover:bg-gray-800">
-                <i class="fas fa-users"></i>
-                <span>Clients</span>
             </a>
             <a href="AdminReviews.php" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-400 hover:bg-gray-800">
                 <i class="fas fa-star"></i>
@@ -111,9 +117,9 @@ $afficheVechicule=$vechiculeObj->afficheVechicule();
                                     <button class="text-blue-600 hover:text-blue-900">
                                         <i class="fas fa-edit"></i>
                                     </button>
-                                    <button class="text-red-600 hover:text-red-900">
+                                    <a href="deleteVehicule.php?id=<?php echo $vechicule['id_vechicule'] ?>" class="text-red-600 hover:text-red-900">
                                         <i class="fas fa-trash"></i>
-                                    </button>
+                                    </a>
                                 </div>
                             </td>
                         </tr>
