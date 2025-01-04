@@ -1,3 +1,16 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['id_user'])) {
+    header('Location: login.php');
+    exit();
+}
+
+if ($_SESSION['role'] != 2) {
+    header('Location: home.php');
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -16,23 +29,20 @@
         </div>
         
         <nav class="space-y-2">
-            <a href="#" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg bg-white text-black">
+            <a href="admin.php" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-400 hover:bg-gray-800">
                 <i class="fas fa-chart-bar"></i>
                 <span>Dashboard</span>
             </a>
-            <a href="#" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-400 hover:bg-gray-800">
+            <a href="AdminVehicles.php" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-400 hover:bg-gray-800">
                 <i class="fas fa-car"></i>
                 <span>Véhicules</span>
             </a>
-            <a href="#" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-400 hover:bg-gray-800">
+            <a href="Adminreservation.php" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-400 hover:bg-gray-800">
                 <i class="fas fa-calendar"></i>
                 <span>Réservations</span>
             </a>
-            <a href="#" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-400 hover:bg-gray-800">
-                <i class="fas fa-users"></i>
-                <span>Clients</span>
-            </a>
-            <a href="#" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-400 hover:bg-gray-800">
+            
+            <a href="AdminReviews.php" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg bg-white text-black">
                 <i class="fas fa-star"></i>
                 <span>Avis</span>
             </a>
@@ -98,7 +108,6 @@
                     </div>
                 </div>
 
-                <!-- More Review Cards -->
             </div>
 
             <!-- Pagination -->
