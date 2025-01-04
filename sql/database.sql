@@ -64,5 +64,29 @@ INSERT INTO categorie (name) VALUES ('SUV'), ('Berline'), ('Camionnette');
 
 INSERT INTO vechicule (name, model, prix, categorie_id, image) 
 VALUES 
-('Toyota RAV4', '2022', 50, 1, 'toyota_rav4.jpg'),
-('BMW X5', '2023', 70, 1, 'bmw_x5.jpg');
+('Toyota RAV4', '2022', 50, 1, '../assets/images/toyota_rav4.jpg'),
+('BMW X5', '2023', 70, 1, '../assets/images/bmw_x5.jpg');
+
+ALTER TABLE reviews 
+ADD COLUMN created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+ADD COLUMN deleted_at DATETIME DEFAULT NULL;
+
+
+INSERT INTO vechicule (name, model, prix, categorie_id, image) 
+VALUES 
+('Honda CR-V', '2021', 60, 1, '../assets/images/honda_crv.jpg'),
+('Mercedes-Benz GLC', '2023', 85, 1, '../assets/images/mercedes_glc.jpg'),
+('Audi A4', '2022', 75, 2, '../assets/images/audi_a4.jpg'),
+('Tesla Model S', '2023', 120, 2, '../assets/images/tesla_model_s.jpg'),
+('Ford F-150', '2020', 65, 3, '../assets/images/ford_f150.jpg'),
+('Chevrolet Silverado', '2021', 75, 3, '../assets/images/chevrolet_silverado.jpg');
+
+
+INSERT INTO place (name) VALUES 
+('Aéroport Mohammed V'),
+('Gare Casa Voyageurs'),
+('Agence Centre-Ville'),
+('Marina Casablanca'),
+('Aéroport Marrakech Menara'),
+('Gare Rabat Ville');
+
