@@ -98,3 +98,6 @@ ALTER TABLE reservation
    
 ALTER TABLE reservation   
    ADD CONSTRAINT reservation_ibfk_2 FOREIGN KEY (vehicle_id) REFERENCES vechicule(id_vechicule) ON DELETE CASCADE;
+
+   INSERT INTO reviews (vehicle_id, rating, comment, user_id, created_at, deleted_at)
+     VALUES (9, 5, 'Amazing car, great performance!', 8, NOW(), NULL);
