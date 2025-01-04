@@ -10,6 +10,14 @@ if ($_SESSION['role'] != 2) {
     header('Location: home.php');
     exit();
 }
+
+include '../includes/autoloader.php';
+
+
+$database = new Database();
+$db = $database->getConnection();
+$reviewObj= new Review($db);
+$affichereviews=$reviewObj->afficheReviews();
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -75,14 +83,15 @@ if ($_SESSION['role'] != 2) {
             <!-- Reviews Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Review Card -->
+    <?php foreach($affichereviews as $review):?>
                 <div class="bg-white rounded-lg shadow">
                     <div class="p-6">
                         <div class="flex justify-between items-start mb-4">
                             <div class="flex items-center">
-                                <img src="/api/placeholder/40/40" class="h-10 w-10 rounded-full mr-3">
+                                <img src="<?= htmlspecialchars($review['image'])?>" class="h-10 w-10 rounded-full mr-3">
                                 <div>
-                                    <div class="font-medium">Marie Laurent</div>
-                                    <div class="text-sm text-gray-500">Il y a 2 jours</div>
+                                    <div class="font-medium"><?= htmlspecialchars($review['client'])?></div>
+                                    <div class="text-sm text-gray-500"><?= htmlspecialchars($review['rating'])?></div>
                                 </div>
                             </div>
                             <div class="flex text-yellow-400">
@@ -94,19 +103,21 @@ if ($_SESSION['role'] != 2) {
                             </div>
                         </div>
                         <div class="mb-4">
-                            <div class="font-medium mb-1">Porsche 911 GT3</div>
-                            <p class="text-gray-600">Expérience exceptionnelle avec cette voiture. Service impeccable et véhicule en parfait état.</p>
+                            <div class="font-medium mb-1"><?= htmlspecialchars($review['name'])?></div>
+                            <p class="text-gray-600"><?= htmlspecialchars($review['comment'])?></p>
                         </div>
                         <div class="flex justify-end space-x-2">
                             <button class="text-gray-600 hover:text-gray-900">
                                 <i class="fas fa-eye"></i>
                             </button>
-                            <button class="text-red-600 hover:text-red-900">
+                            <a href="deletereview.php?id=<?php echo $review['id_reviews']?>" class="text-red-600 hover:text-red-900">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
                     </div>
                 </div>
+             <?php   endforeach;?>
+                
 
             </div>
 
