@@ -104,5 +104,19 @@ class Vehicle {
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $result;
     }
+
+    public function addVehicle($name, $model, $price, $category, $image) {
+        $query = "INSERT INTO vechicule (name, model, prix, categorie_id, image) 
+                  VALUES (:name, :model, :prix, :categorie_id, :image)";
+        
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':model', $model);
+        $stmt->bindParam(':prix', $price);
+        $stmt->bindParam(':categorie_id', $category);
+        $stmt->bindParam(':image', $image);
+        
+        return $stmt->execute();
+    }
 }
 ?>
