@@ -14,8 +14,48 @@ include '../includes/autoloader.php';
 
 $database = new Database();
 $db = $database->getConnection();
+
 $vechiculeObj= new Vehicle($db);
 $afficheVechicule=$vechiculeObj->afficheVechicule();
+
+$categoryObj = new Category($db);
+$categories = $categoryObj->getAllCategories();
+
+if(isset($_POST['submit'])) {
+    $names = $_POST['vehicle_name'];
+    $models = $_POST['vehicle_model'];
+    $prices = $_POST['vehicle_price'];
+    $categories = $_POST['vehicle_category'];
+    $images = $_POST['vehicle_image'];
+    
+    $success = true;
+    
+    for($i = 0; $i < count($names); $i++) {
+        if(!$vechiculeObj->addVehicle(
+            $names[$i], 
+            $models[$i], 
+            $prices[$i], 
+            $categories[$i], 
+            $images[$i]
+        )) {
+            $success = false;
+            break;
+        }
+    }
+    
+    if($success) {
+        header('Location: AdminVehicles.php?msg=success');
+        exit();
+    } else {
+        header('Location: AdminVehicles.php?msg=error');
+        exit();
+    }
+}
+
+// Show message if exists
+if(isset($_GET['msg'])) {
+    $message = $_GET['msg'] === 'success' ? 'Vehicles added successfully!' : 'Error adding vehicles!';
+}
 
 ?>
 <!DOCTYPE html>
@@ -59,6 +99,11 @@ $afficheVechicule=$vechiculeObj->afficheVechicule();
         <!-- Main Content -->
         <div class="ml-64 flex-1 p-8">
             <div class="flex justify-between items-center mb-6">
+            <?php if(isset($message)): ?>
+    <div class="bg-<?php echo $_GET['msg'] === 'success' ? 'green' : 'red'; ?>-100 border-l-4 border-<?php echo $_GET['msg'] === 'success' ? 'green' : 'red'; ?>-500 text-<?php echo $_GET['msg'] === 'success' ? 'green' : 'red'; ?>-700 p-4 mb-4" role="alert">
+        <p><?php echo $message; ?></p>
+    </div>
+          <?php endif; ?>
                 <h2 class="text-3xl font-light">Gestion des Véhicules</h2>
                 <button id="addVehicle" class="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800">
                     <i class="fas fa-plus mr-2"></i>Ajouter en Masse
@@ -97,9 +142,12 @@ $afficheVechicule=$vechiculeObj->afficheVechicule();
                             <label for="category" class="text-black font-primary font-semibold">Category</label>
                             <select id="category" name="vehicle_category[]" class="shadow-md p-2 rounded-md" required>
                                 <option value="">Select Category</option>
-                                <option value="1">Luxury</option>
-                                <option value="2">SUV</option>
-                                <option value="3">Sports</option>
+                                <?php foreach($categories as $category): ?>
+                                 <option value="<?php echo htmlspecialchars($category['id_categorie']); ?>">
+                                <?php echo htmlspecialchars($category['name']); ?>
+                            </option>
+                              <?php endforeach; ?>
+                                
                             </select>
                         </div>
 
