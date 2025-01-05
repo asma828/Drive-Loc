@@ -40,11 +40,8 @@ class Reservation {
         $query = "SELECT COUNT(*) as count 
                   FROM reservation
                   WHERE vehicle_id = :vehicle_id 
-                  AND (
-                      (start_date BETWEEN :start_date AND :end_date)
-                      OR (end_date BETWEEN :start_date AND :end_date)
-                      OR (:start_date BETWEEN start_date AND end_date)
-                  )";
+                  AND start_date < :end_date 
+                  AND end_date > :start_date";
 
         $stmt = $this->conn->prepare($query);
         
@@ -91,7 +88,7 @@ public function numbreofreservation(){
 }
 
  public function affichereservation(){
-    $query="SELECT DATEDIFF(reservation.end_date,reservation.start_date) as durée,vechicule.image,vechicule.name,vechicule.prix,utilisateur.name as client
+    $query="SELECT DATEDIFF(reservation.end_date,reservation.start_date) as durée,reservation.status,reservation.id_reservation,vechicule.image,vechicule.name,vechicule.prix,utilisateur.name as client
     FROM vechicule
     join reservation on vechicule.id_vechicule=reservation.vehicle_id
     join utilisateur on utilisateur.id_user=reservation.user_id";
@@ -100,4 +97,6 @@ public function numbreofreservation(){
      $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
      return $result;
  }
+
+ 
 }
