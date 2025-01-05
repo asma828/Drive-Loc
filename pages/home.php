@@ -80,7 +80,7 @@ if ($_SESSION['role'] == 2) {
                     </a>
                     <div class="hidden md:flex space-x-8">
                         <a href="vehicles.php" class="text-sm tracking-wider hover:text-gold transition-colors duration-300">VÉHICULES</a>
-                        <a href="reservation.php" class="text-sm tracking-wider hover:text-gold transition-colors duration-300">RÉSERVER</a>
+                        <a href="affichereservation.php" class="text-sm tracking-wider hover:text-gold transition-colors duration-300">RÉSERVER</a>
                         <a href="reviews.php" class="text-sm tracking-wider hover:text-gold transition-colors duration-300">AVIS</a>
                     </div>
                 </div>
@@ -120,20 +120,6 @@ if ($_SESSION['role'] == 2) {
             </div>
         </div>
 
-        <!-- Featured Cars Slider -->
-        <!-- <div class="absolute bottom-0 right-0 w-full md:w-1/2 bg-black bg-opacity-80 p-8">
-            <div class="flex items-center justify-between mb-8">
-                <h3 class="text-2xl font-light">Véhicules en Vedette</h3>
-                <div class="flex space-x-4">
-                    <button class="w-12 h-12 border border-white flex items-center justify-center hover:bg-white hover:text-black transition-colors duration-300">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <button class="w-12 h-12 border border-white flex items-center justify-center hover:bg-white hover:text-black transition-colors duration-300">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="grid grid-cols-3 gap-8"> -->
                 <!-- Featured Car Card -->
                 <div class="hover-scale cursor-pointer">
                     <img src="../assets/images/car.jpg" alt="Featured Car" class="w-full h-48 object-cover mb-4">
@@ -141,7 +127,6 @@ if ($_SESSION['role'] == 2) {
                     <p class="text-sm text-gray-400">À partir de 1200€/jour</p>
                 </div>
                 
-                <!-- Add more featured cars here -->
             </div>
         </div>
     </section>
