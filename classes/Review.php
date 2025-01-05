@@ -86,5 +86,22 @@ class Review {
         
         return $stmt->execute();
     }
+
+    public function updateReview($reviewId, $userId, $rating, $comment) {
+        $query = "UPDATE reviews 
+                  SET rating = :rating, 
+                      comment = :comment 
+                  WHERE id_reviews = :review_id 
+                  AND user_id = :user_id 
+                  AND deleted_at IS NULL";
+                  
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':review_id', $reviewId);
+        $stmt->bindParam(':user_id', $userId);
+        $stmt->bindParam(':rating', $rating);
+        $stmt->bindParam(':comment', $comment);
+        
+        return $stmt->execute();
+    }
 }
 ?>
