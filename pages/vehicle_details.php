@@ -274,5 +274,22 @@ $vehicle = $vehicleObj->getVehicleById($id);
     <footer class="bg-black text-white py-16">
         
     </footer>
+
+    <script>
+function editReview(reviewId, rating, comment) {
+    // Set values
+    document.getElementById('editReviewId').value = reviewId;
+    document.getElementById('editComment').value = comment;
+    document.querySelector(`input[name="rating"][value="${rating}"]`).checked = true;
+    
+    
+    document.getElementById('editModal').classList.remove('hidden');
+}
+
+function closeEditModal() {
+    document.getElementById('editModal').classList.add('hidden');
+}
+</script>
+
 </body>
 </html>
