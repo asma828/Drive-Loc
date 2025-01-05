@@ -102,13 +102,11 @@ $userReservations = $reservation->getReservationsByUser($_SESSION['id_user']);
                                    class="inline-block bg-gray-500 text-white px-4 py-2 rounded hover:bg-blue-600">
                                     Modifier
                                 </a>
-                                <a href="Delete Reservation.php?id=<?php echo $reservation['id_reservation']; ?>)"
+                                <a href="DeleteReservation.php?id=<?php echo $reservation['id_reservation']; ?>)"
                                 class="inline-block bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
                                     Annuler
                                 </a>
                             </div>
-                            
-                           
                         </div>
                     </div>
                 </div>

@@ -1,4 +1,5 @@
 <?php
+session_start();
 include '../includes/autoloader.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {

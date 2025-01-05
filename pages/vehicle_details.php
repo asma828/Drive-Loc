@@ -205,9 +205,9 @@ $vehicle = $vehicleObj->getVehicleById($id);
                 <p class="text-gray-600"><?= htmlspecialchars($review['comment']) ?></p>
                 <?php if($yourReview): ?>
                  <div class="flex space-x-3">
-                        <a href="" class="text-blue-600 hover:text-blue-900">
+                        <button onclick="editReview(<?= $review['id_reviews'] ?>, <?= $review['rating'] ?>, '<?= htmlspecialchars($review['comment'], ENT_QUOTES) ?>')" class="text-blue-600 hover:text-blue-900">
                             <i class="fas fa-edit"></i>
-                            </a>
+                        </button>
                         <a href="delete-review.php?id=<?= $review['id_reviews'] ?>" class="text-red-600 hover:text-red-900">
                             <i class="fas fa-trash"></i>
                         </a>
