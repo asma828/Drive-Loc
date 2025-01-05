@@ -61,16 +61,6 @@ class Review {
          return $result;
     }
 
-    public function afficheReviews(){
-        $query="SELECT vechicule.image,vechicule.name,utilisateur.name as client,reviews.comment,reviews.rating,reviews.id_reviews 
-        FROM reviews
-        join vechicule on vechicule.id_vechicule= reviews.vehicle_id
-        join utilisateur on utilisateur.id_user= reviews.user_id";
-    
-       $stmt =$this->conn->prepare($query);
-      $stmt->execute();
-      $result=$stmt->fetchAll(PDO::FETCH_ASSOC);
-      return $result;
-    }
+
 }
 ?>
