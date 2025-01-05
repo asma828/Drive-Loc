@@ -223,6 +223,45 @@ $vehicle = $vehicleObj->getVehicleById($id);
     </div>
 </div>
 
+<!-- Edit Modal -->
+<div id="editModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center">
+    <div class="bg-white p-6 rounded-lg w-full max-w-lg">
+        <form action="update-review.php" method="POST" class="space-y-4">
+            <input type="hidden" name="review_id" id="editReviewId">
+            
+            <div>
+                <label class="block mb-2">Note</label>
+                <div class="flex space-x-4">
+                    <?php for($i = 1; $i <= 5; $i++): ?>
+                    <label>
+                        <input type="radio" name="rating" value="<?= $i ?>" class="hidden peer">
+                        <i class="fas fa-star text-2xl peer-checked:text-gold text-gray-300"></i>
+                    </label>
+                    <?php endfor; ?>
+                </div>
+            </div>
+
+            <div>
+                <label class="block mb-2">Commentaire</label>
+                <textarea name="comment" id="editComment" rows="4" 
+                        class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-gold"
+                        required></textarea>
+            </div>
+
+            <div class="flex justify-end gap-4">
+                <button type="button" onclick="closeEditModal()" 
+                        class="px-4 py-2 border rounded-lg hover:bg-gray-100">
+                    Annuler
+                </button>
+                <button type="submit" 
+                        class="bg-black text-white px-4 py-2 rounded-lg hover:bg-gold">
+                    Modifier
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
         <!-- Similar Vehicles -->
         <div class="mt-16">
             <h2 class="heading-font text-3xl mb-6">Véhicules Similaires</h2>
