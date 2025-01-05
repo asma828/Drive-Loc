@@ -17,8 +17,6 @@ $db = $database->getConnection();
 $vechiculeObj= new Vehicle($db);
 $afficheVechicule=$vechiculeObj->afficheVechicule();
 
-
-
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -67,59 +65,64 @@ $afficheVechicule=$vechiculeObj->afficheVechicule();
                 </button>
             </div>
 
-<!-- Popup for Add Vehicle -->
-<div
-        class="fixed inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center hidden z-50"
-        id="pop_add_vehicle">
-        <div class="bg-white rounded-lg w-1/2 p-6 relative">
-            <button
-                id="ClosePopUp"
-                class="absolute top-3 right-3 text-gray-600 hover:text-gray-900 text-2xl font-bold">
+            <div class="fixed inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center hidden z-50" id="pop_add_vehicle">
+        <div class="bg-white rounded-lg w-1/2 p-6 relative overflow-y-auto">
+            <button id="ClosePopUp" class="absolute top-3 right-3 text-gray-600 hover:text-gray-900 text-2xl font-bold">
                 &times;
             </button>
             <h3 class="text-xl font-primary mb-4 text-center text-black">Add Vehicle</h3>
             <form action="" method="POST" enctype="multipart/form-data">
-                <div class="flex flex-col gap-5">
-                    <!-- Vehicle Name -->
-                    <div class="flex flex-col">
-                        <label for="name" class="text-black font-primary font-semibold">Vehicle Name</label>
-                        <input type="text" id="name" name="name" class="shadow-md p-2 rounded-md" required>
-                    </div>
+                <div id="inputs" class="space-y-5">
+                    <div class="input-group">
+                        <!-- Vehicle Name -->
+                        <div class="flex flex-col">
+                            <label for="name" class="text-black font-primary font-semibold">Vehicle Name</label>
+                            <input type="text" id="name" name="vehicle_name[]" class="shadow-md p-2 rounded-md" required>
+                        </div>
 
-                    <!-- Vehicle Model -->
-                    <div class="flex flex-col">
-                        <label for="model" class="text-black font-primary font-semibold">Vehicle Model</label>
-                        <input type="text" id="model" name="model" class="shadow-md p-2 rounded-md" required>
-                    </div>
+                        <!-- Vehicle Model -->
+                        <div class="flex flex-col">
+                            <label for="model" class="text-black font-primary font-semibold">Vehicle Model</label>
+                            <input type="text" id="model" name="vehicle_model[]" class="shadow-md p-2 rounded-md" required>
+                        </div>
 
-                    <!-- Price -->
-                    <div class="flex flex-col">
-                        <label for="price" class="text-black font-primary font-semibold">Price (per day)</label>
-                        <input type="number" step="0.01" id="price" name="price" class="shadow-md p-2 rounded-md" required>
-                    </div>
+                        <!-- Price -->
+                        <div class="flex flex-col">
+                            <label for="price" class="text-black font-primary font-semibold">Price</label>
+                            <input type="number" step="0.01" id="price" name="vehicle_price[]" class="shadow-md p-2 rounded-md" required>
+                        </div>
 
-                    <!-- Category -->
-                    <div class="flex flex-col">
-                        <label for="category" class="text-black font-primary font-semibold">Category</label>
-                        <select id="category" name="category" class="shadow-md p-2 rounded-md" required>
-                            <option value="">Select Category</option>
-                            <option value="1">Luxury</option>
-                            <option value="2">SUV</option>
-                            <option value="3">Sports</option>
-                        </select>
-                    </div>
+                        <!-- Category -->
+                        <div class="flex flex-col">
+                            <label for="category" class="text-black font-primary font-semibold">Category</label>
+                            <select id="category" name="vehicle_category[]" class="shadow-md p-2 rounded-md" required>
+                                <option value="">Select Category</option>
+                                <option value="1">Luxury</option>
+                                <option value="2">SUV</option>
+                                <option value="3">Sports</option>
+                            </select>
+                        </div>
 
-                    <!-- Vehicle Image -->
-                    <div class="flex flex-col">
-                        <label for="image" class="text-black font-primary font-semibold">Vehicle Image</label>
-                        <input type="text" id="image" name="image" class="shadow-md p-2 rounded-md" required>
+                        <!-- Vehicle Image -->
+                        <div class="flex flex-col">
+                            <label for="image" class="text-black font-primary font-semibold">Vehicle Image</label>
+                            <input type="text" id="image" name="vehicle_image[]" class="shadow-md p-2 rounded-md" required>
+                        </div>
                     </div>
-
-                    <!-- Submit Button -->
-                    <button id="submit" name="submit" class="bg-black text-white px-6 py-3 rounded-md mt-4 hover:bg-gold transition-colors duration-300">
-                        Add Vehicle
+                </div>
+                <div class="flex gap-6 text-primary text-3xl mt-4">
+                    <button class="text-black" type="button" onclick="addInput()">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                    <button class="text-black" type="button" onclick="removeInput()">
+                        <i class="fas fa-minus"></i>
                     </button>
                 </div>
+
+                <!-- Submit Button -->
+                <button id="submit" name="submit" class="bg-black text-white px-6 py-3 rounded-md mt-4 hover:bg-gold transition-colors duration-300">
+                    Add Vehicle
+                </button>
             </form>
         </div>
     </div>
@@ -139,7 +142,7 @@ $afficheVechicule=$vechiculeObj->afficheVechicule();
             </div>
 
             <!-- Vehicles Table -->
-            <div class="bg-white rounded-lg shadow overflow-hidden">
+            <div class="bg-white rounded-lg shadow overflow-hidden overflow-y-auto">
                 <table class="w-full">
                     <thead class="bg-gray-50">
                         <tr>
@@ -171,7 +174,7 @@ $afficheVechicule=$vechiculeObj->afficheVechicule();
                             </td>
                             <td class="px-6 py-4">
                                 <div class="flex space-x-3">
-                                    <button class="text-blue-600 hover:text-blue-900">
+                                    <a href="updatereservation.php?id=<?php echo $vechicule['id_vechicule'] ?>" class="text-blue-600 hover:text-blue-900">
                                         <i class="fas fa-edit"></i>
                                     </button>
                                     <a href="deleteVehicule.php?id=<?php echo $vechicule['id_vechicule'] ?>" class="text-red-600 hover:text-red-900">
@@ -236,6 +239,22 @@ $afficheVechicule=$vechiculeObj->afficheVechicule();
         ClosePopUp.addEventListener("click", () => {
             pop_add_vehicle.classList.toggle("hidden");
         });
+
+        let inputsContainer = document.getElementById('inputs');
+        let inputCopy = inputsContainer.firstElementChild.cloneNode(true);
+        let count = 1;
+
+        function addInput() {
+            inputsContainer.appendChild(inputCopy.cloneNode(true));
+            count++;
+        }
+
+        function removeInput(){
+            if (count > 1) {
+                inputsContainer.removeChild(inputsContainer.lastElementChild);
+                count--;
+            }
+        }
     </script>
 </body>
 </html>
