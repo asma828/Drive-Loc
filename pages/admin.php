@@ -23,6 +23,9 @@ $nomberofVechicule=$vechiculeObj->numbreofVechicule();
 
 $utilisateurObj= new Utilisateur($database);
 $numberofclient=$utilisateurObj->numbreofclient();
+
+$reviewsObj= new Review($db);
+$numberofreviews=$reviewsObj->numberofreviews();
 ?>
 
 <!DOCTYPE html>
@@ -55,14 +58,11 @@ $numberofclient=$utilisateurObj->numbreofclient();
                 <i class="fas fa-calendar"></i>
                 <span>Réservations</span>
             </a>
-            <a href="#" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-400 hover:bg-gray-800">
-                <i class="fas fa-users"></i>
-                <span>Clients</span>
-            </a>
             <a href="AdminReviews.php" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-400 hover:bg-gray-800">
                 <i class="fas fa-star"></i>
                 <span>Avis</span>
             </a>
+            
         </nav>
     </div>
 
@@ -118,8 +118,8 @@ $numberofclient=$utilisateurObj->numbreofclient();
                     <i class="fas fa-star text-gray-600"></i>
                     <span class="text-sm text-green-500">+0.3</span>
                 </div>
-                <h3 class="text-3xl font-light mb-1">4.8</h3>
-                <p class="text-sm text-gray-600">Note Moyenne</p>
+                <h3 class="text-3xl font-light mb-1"><?= htmlspecialchars($numberofreviews['total']) ?></h3>
+                <p class="text-sm text-gray-600">Client avis</p>
             </div>
         </div>
 
