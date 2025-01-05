@@ -103,5 +103,17 @@ class Review {
         
         return $stmt->execute();
     }
+
+    public function getReviewById($reviewId) {
+        $query = "SELECT * FROM reviews 
+                  WHERE id_reviews = :review_id 
+                  AND deleted_at IS NULL";
+                  
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':review_id', $reviewId);
+        $stmt->execute();
+        
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }
 ?>
