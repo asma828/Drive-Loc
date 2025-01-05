@@ -137,8 +137,6 @@ $vehicle = $vehicleObj->getVehicleById($id);
             <h2 class="heading-font text-3xl mb-6">Avis Clients</h2>
            
             <?php 
-            
-    
     $userId = $_SESSION['id_user'];
     
     if ($userId) {
@@ -188,6 +186,7 @@ $vehicle = $vehicleObj->getVehicleById($id);
         $reviews = $reviewObj->getReviewsByVehicle($id);
         if($reviews): 
             foreach($reviews as $review): 
+                $yourReview = isset($_SESSION['id_user']) && $review['user_id'] == $_SESSION['id_user'];
         ?>
             <div class="bg-white p-6 rounded-lg shadow">
                 <div class="flex justify-between items-start mb-4">
@@ -204,14 +203,16 @@ $vehicle = $vehicleObj->getVehicleById($id);
                     </span>
                 </div>
                 <p class="text-gray-600"><?= htmlspecialchars($review['comment']) ?></p>
-                <div class="flex space-x-3">
+                <?php if($yourReview): ?>
+                 <div class="flex space-x-3">
                         <a href="" class="text-blue-600 hover:text-blue-900">
                             <i class="fas fa-edit"></i>
                             </a>
-                        <a href="" class="text-red-600 hover:text-red-900">
+                        <a href="delete-review.php?id=<?= $review['id_reviews'] ?>" class="text-red-600 hover:text-red-900">
                             <i class="fas fa-trash"></i>
                         </a>
-                    </div>
+                    </div> 
+                    <?php endif; ?>
             </div>
         <?php 
             endforeach; 
