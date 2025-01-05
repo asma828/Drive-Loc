@@ -72,5 +72,19 @@ class Review {
       $result=$stmt->fetchAll(PDO::FETCH_ASSOC);
       return $result;
     }
+
+    public function deleteReview($reviewId, $userId) {
+        // soft delete by setting deleted_at
+        $query = "UPDATE reviews 
+                  SET deleted_at = CURRENT_TIMESTAMP 
+                  WHERE id_reviews = :review_id 
+                  AND user_id = :user_id";
+                  
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':review_id', $reviewId);
+        $stmt->bindParam(':user_id', $userId);
+        
+        return $stmt->execute();
+    }
 }
 ?>
